@@ -1831,11 +1831,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "SearchForm",
+  data: function data() {
+    return {
+      search: false
+    };
+  },
   components: {
     room: _SearchForm_Room__WEBPACK_IMPORTED_MODULE_0__["default"],
     price: _SearchForm_Price__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -1843,7 +1861,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     sendRequest: function sendRequest() {
+      var _this = this;
+
       // console.log('Send request!!!');
+      this.search = true;
       var formData = new FormData();
       axios.get('/ajax').then(function (response) {
         console.log(response);
@@ -1851,6 +1872,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       }).then(function () {
         console.log('Response anyway');
+        _this.search = false;
       });
     }
   }
@@ -38366,34 +38388,36 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._m(0)
+          _c(
+            "div",
+            { staticClass: "d-flex justify-content-center col-12 px-0 mt-3" },
+            [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "btn btn-primary btn-block col-8  col-sm-5 col-lg-4 col-xl-3",
+                  attrs: { type: "submit", disabled: _vm.search }
+                },
+                [
+                  _vm.search
+                    ? _c("span", {
+                        staticClass: "spinner-border spinner-border-sm",
+                        attrs: { role: "status", "aria-hidden": "true" }
+                      })
+                    : _vm._e(),
+                  _vm._v("\n                    Поиск"),
+                  _vm.search ? _c("span", [_vm._v("...")]) : _vm._e()
+                ]
+              )
+            ]
+          )
         ]
       )
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "d-flex justify-content-center col-12 px-0 mt-3" },
-      [
-        _c(
-          "button",
-          {
-            staticClass:
-              "btn btn-primary btn-block col-8  col-sm-5 col-lg-4 col-xl-3",
-            attrs: { type: "submit" }
-          },
-          [_vm._v("Поиск")]
-        )
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

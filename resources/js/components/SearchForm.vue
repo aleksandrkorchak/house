@@ -44,7 +44,20 @@
                 </div>
 
                 <div class="d-flex justify-content-center col-12 px-0 mt-3">
-                    <button class="btn btn-primary btn-block col-8  col-sm-5 col-lg-4 col-xl-3" type="submit">Поиск</button>
+                    <button
+                        class="btn btn-primary btn-block col-8  col-sm-5 col-lg-4 col-xl-3"
+                        type="submit"
+                        :disabled="search"
+                    >
+                        <span
+                            class="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                            v-if="search"
+                        >
+                        </span>
+                        Поиск<span v-if="search">...</span>
+                    </button>
                 </div>
 
             </form>
@@ -60,6 +73,11 @@
 
     export default {
         name: "SearchForm",
+        data() {
+            return {
+                search: false
+            }
+        },
         components: {
             room: Room,
             price: Price,
@@ -68,6 +86,7 @@
         methods: {
             sendRequest() {
                 // console.log('Send request!!!');
+                this.search = true;
                 const formData = new FormData();
 
                 axios.get('/ajax')
@@ -77,8 +96,9 @@
                     .catch(function (error) {
                         console.log(error)
                     })
-                    .then(function () {
+                    .then(() => {
                         console.log('Response anyway')
+                        this.search = false
                     });
             }
         }
