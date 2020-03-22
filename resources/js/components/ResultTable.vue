@@ -12,14 +12,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
+        <tr v-for="(house, index) in houses" >
+            <th scope="row">{{ index + 1 }}</th>
+            <td>{{ house.name }}</td>
+            <td>{{ house.price }}</td>
+            <td>{{ house.bedrooms }}</td>
+            <td>{{ house.bathrooms }}</td>
+            <td>{{ house.storeys }}</td>
+            <td>{{ house.garages }}</td>
         </tr>
         </tbody>
     </table>
@@ -27,7 +27,23 @@
 
 <script>
     export default {
-        name: "ResultTable"
+        name: "ResultTable",
+        // data() {
+        //     return {
+        //         houses: this.$store.state.houses
+        //     }
+        // },
+        // watch: {
+        //     houses: function () {
+        //         console.log('houses changed!!!')
+        //     }
+        // },
+        computed: {
+            houses () {
+                // console.log(this.$store.state.houses);
+                return this.$store.state.houses
+            }
+        }
     }
 </script>
 

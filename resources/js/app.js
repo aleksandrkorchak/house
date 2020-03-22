@@ -26,6 +26,8 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('app', require('./components/App.vue').default);
+
+import store from './store'
 import Vuelidate from "vuelidate";
 Vue.use(Vuelidate);
 
@@ -36,5 +38,6 @@ Vue.use(Vuelidate);
  */
 
 const app = new Vue({
+    store,
     el: '#app'
 });

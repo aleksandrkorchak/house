@@ -6,26 +6,31 @@
         <div class="card-body">
 
             <form class="needs-validation" novalidate @submit.prevent="sendRequest">
+<!--            <form method="post" action="/test" class="needs-validation" novalidate>-->
+
+<!--                <input type="hidden" name="_token" id="csrf-token"-->
+<!--                       :value="csrf" />-->
+
                 <div class="form-row my-3">
                     <div class="col-md-12 col-lg-6">
-                        <name></name>
+                        <name ref="name"></name>
                     </div>
                 </div>
 
                 <div class="form-row mt-3">
                     <div class="col-md-12">
-                        <price></price>
+                        <price ref="price"></price>
                     </div>
                 </div>
 
                 <div class="form-row">
 
                     <div class="col-md-12 col-lg-6">
-                        <room id="bedroom" text="Спальни"></room>
+                        <room ref="bedroom" id="bedroom" text="Спальни"></room>
                     </div>
 
                     <div class="col-md-12 col-lg-6">
-                        <room id="bathroom" text="Ванные"></room>
+                        <room ref="bathroom" id="bathroom" text="Ванные"></room>
                     </div>
 
                 </div>
@@ -34,11 +39,11 @@
                 <div class="form-row">
 
                     <div class="col-md-12 col-lg-6">
-                        <room id="storey" text="Этажи"></room>
+                        <room ref="storey" id="storey" text="Этажи"></room>
                     </div>
 
                     <div class="col-md-12 col-lg-6">
-                        <room id="garage" text="Гаражи"></room>
+                        <room ref="garage" id="garage" text="Гаражи"></room>
                     </div>
 
                 </div>
@@ -75,7 +80,8 @@
         name: "SearchForm",
         data() {
             return {
-                search: false
+                search: false,
+                // csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         },
         components: {
@@ -85,21 +91,38 @@
         },
         methods: {
             sendRequest() {
-                // console.log('Send request!!!');
                 this.search = true;
                 const formData = new FormData();
+                formData.append('name', this.$refs.name.name);
+                formData.append('priceMin', this.$refs.price.priceMin);
+                formData.append('priceMax', this.$refs.price.priceMax);
+                formData.append('bedroom', this.$refs.bedroom.name);
+                formData.append('bathroom', this.$refs.bathroom.name);
+                formData.append('storey', this.$refs.storey.name);
+                formData.append('garage', this.$refs.garage.name);
 
-                axios.get('/ajax')
-                    .then(function (response) {
-                        console.log(response)
+                // console.log(formData.getAll('priceMin'));
+                // console.log(formData.getAll('priceMax'));
+                // console.log(formData.getAll('bedroom'));
+
+                axios.defaults.headers.common['X-CSRF-TOKEN'] =
+                    document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                axios.post('/ajax', formData)
+                    .then((response) => {
+                        // console.log(response.data);
+                        this.$store.state.houses = response.data;
+                        // console.log(this.$store.state.houses)
                     })
                     .catch(function (error) {
                         console.log(error)
                     })
                     .then(() => {
-                        console.log('Response anyway')
+                        console.log('Response anyway');
                         this.search = false
                     });
+            },
+            send() {
+
             }
         }
     }

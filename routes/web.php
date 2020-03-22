@@ -15,5 +15,6 @@ Route::get('/', function () {
     return view('spa');
 });
 
-Route::get('/ajax', 'Ajax\HouseController@findHouse');
+Route::post('/ajax', 'Ajax\HouseController@findHouse');
+Route::get('/test', 'Ajax\HouseController@test');
 

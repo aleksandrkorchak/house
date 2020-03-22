@@ -12,6 +12,7 @@
             class="form-control"
             :class="{'is-invalid': $v.name.$error}"
             id="name"
+
             v-model.trim="$v.name.$model"
         >
 

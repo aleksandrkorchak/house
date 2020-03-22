@@ -8,7 +8,7 @@
 
         <label for="priceMin" class="d-md-none col-lg-12 px-0 mb-0">Цена</label>
         <input
-            type="text"
+            type="number"
             class="form-control col-md-12 mr-2"
             :class="{'is-invalid': $v.priceMin.$error}"
             id="priceMin"
@@ -18,7 +18,7 @@
 
         <label for="priceMax"></label>
         <input
-            type="text"
+            type="number"
             class="form-control col-md-12"
             :class="{'is-invalid': $v.priceMax.$error}"
             id="priceMax"
@@ -54,8 +54,8 @@
 
         data() {
             return {
-                priceMin: null,
-                priceMax: null
+                priceMin: '',
+                priceMax: ''
             }
         },
         validations: {
