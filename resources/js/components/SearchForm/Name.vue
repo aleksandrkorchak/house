@@ -6,58 +6,70 @@
                 <span class="input-group-text">Имя</span>
             </div>
         </div>
+
         <label for="name" class="col-12 d-md-none px-0 mb-0">Имя</label>
         <input
             type="text"
             class="form-control"
-            :class="{'is-invalid': $v.name.$error}"
             id="name"
-
-            v-model.trim="$v.name.$model"
+            :class="{'is-invalid': v.$error}"
+            v-model.trim="name"
         >
+
 
         <div
             class="invalid-feedback"
             style="width: 100%;"
-            v-if="!$v.name.extAlphaNum"
+            v-if="!v.extAlphaNum"
         >
             Имя может содержать -, а-я, А-Я, a-z, A-Z, 0-9
         </div>
         <div
             class="invalid-feedback"
             style="width: 100%;"
-            v-else-if="!$v.name.minLength"
+            v-else-if="!v.minLength"
         >
             Название должно быть не менее 3 символов
         </div>
         <div
             class="invalid-feedback"
             style="width: 100%;"
-            v-else-if="!$v.name.maxLength"
+            v-else-if="!v.maxLength"
         >
             Название должно быть не более 15 символов
         </div>
+
     </div>
 </template>
 
 <script>
-    import {helpers, maxLength, minLength} from "vuelidate/lib/validators";
-    import {extAlphaNum} from "../../validators";
 
     export default {
-        name: "Name",
-        data() {
-            return {
-                name: '',
+
+        props: {
+            value: {
+                type: String,
+                default: ''
+            },
+            v: {
+                type: Object,
+                required: true
             }
         },
-        validations: {
+
+        computed: {
             name: {
-                extAlphaNum,
-                minLength: minLength(3),
-                maxLength: maxLength(15)
+                get() {
+                    return this.value
+                },
+                set(value) {
+                    this.v.$touch();
+                    // console.log(this.v.$touch());
+                    this.$emit('input', value)
+                }
             }
-        },
+        }
+
     }
 </script>
 

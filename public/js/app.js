@@ -1758,21 +1758,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ResultTable",
-  // data() {
-  //     return {
-  //         houses: this.$store.state.houses
-  //     }
-  // },
-  // watch: {
-  //     houses: function () {
-  //         console.log('houses changed!!!')
-  //     }
-  // },
   computed: {
     houses: function houses() {
-      // console.log(this.$store.state.houses);
       return this.$store.state.houses;
     }
   }
@@ -1792,6 +1797,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SearchForm_Room__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SearchForm/Room */ "./resources/js/components/SearchForm/Room.vue");
 /* harmony import */ var _SearchForm_Price__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SearchForm/Price */ "./resources/js/components/SearchForm/Price.vue");
 /* harmony import */ var _SearchForm_Name__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SearchForm/Name */ "./resources/js/components/SearchForm/Name.vue");
+/* harmony import */ var _validators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../validators */ "./resources/js/validators.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var vuex_map_fields__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex-map-fields */ "./node_modules/vuex-map-fields/dist/index.esm.js");
 //
 //
 //
@@ -1865,6 +1874,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
 
 
 
@@ -1872,8 +1912,18 @@ __webpack_require__.r(__webpack_exports__);
   name: "SearchForm",
   data: function data() {
     return {
-      search: false // csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-
+      search: false,
+      form: {
+        name: '',
+        price: {
+          min: '',
+          max: ''
+        },
+        bedroom: '',
+        bathroom: '',
+        storey: '',
+        garage: ''
+      }
     };
   },
   components: {
@@ -1881,21 +1931,65 @@ __webpack_require__.r(__webpack_exports__);
     price: _SearchForm_Price__WEBPACK_IMPORTED_MODULE_1__["default"],
     name: _SearchForm_Name__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
+  validations: {
+    form: {
+      name: {
+        extAlphaNum: _validators__WEBPACK_IMPORTED_MODULE_3__["extAlphaNum"],
+        minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["minLength"])(3),
+        maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["maxLength"])(15)
+      },
+      price: {
+        min: {
+          currency: _validators__WEBPACK_IMPORTED_MODULE_3__["currency"]
+        },
+        max: {
+          currency: _validators__WEBPACK_IMPORTED_MODULE_3__["currency"],
+          minLessEqualMax: _validators__WEBPACK_IMPORTED_MODULE_3__["minLessEqualMax"]
+        }
+      },
+      bedroom: {
+        numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["numeric"],
+        maxValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["maxValue"])(10)
+      },
+      bathroom: {
+        numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["numeric"],
+        maxValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["maxValue"])(10)
+      },
+      storey: {
+        numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["numeric"],
+        maxValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["maxValue"])(10)
+      },
+      garage: {
+        numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["numeric"],
+        maxValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_4__["maxValue"])(10)
+      }
+    }
+  },
   methods: {
+    price: function price(event) {
+      switch (event.target.id) {
+        case 'min':
+          this.form.price.min = event.target.value;
+          break;
+
+        case 'max':
+          this.form.price.max = event.target.value;
+          break;
+      }
+    },
     sendRequest: function sendRequest() {
       var _this = this;
 
+      // console.log(this);
       this.search = true;
       var formData = new FormData();
-      formData.append('name', this.$refs.name.name);
-      formData.append('priceMin', this.$refs.price.priceMin);
-      formData.append('priceMax', this.$refs.price.priceMax);
-      formData.append('bedroom', this.$refs.bedroom.name);
-      formData.append('bathroom', this.$refs.bathroom.name);
-      formData.append('storey', this.$refs.storey.name);
-      formData.append('garage', this.$refs.garage.name); // console.log(formData.getAll('priceMin'));
-      // console.log(formData.getAll('priceMax'));
-      // console.log(formData.getAll('bedroom'));
+      formData.append('name', this.form.name);
+      formData.append('priceMin', this.form.price.min);
+      formData.append('priceMax', this.form.price.max);
+      formData.append('bedroom', this.form.bedroom);
+      formData.append('bathroom', this.form.bathroom);
+      formData.append('storey', this.form.storey);
+      formData.append('garage', this.form.garage); // console.log(formData.get('name'));
 
       axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       axios.post('/ajax', formData).then(function (response) {
@@ -1907,8 +2001,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log('Response anyway');
         _this.search = false;
       });
-    },
-    send: function send() {}
+    }
   }
 });
 
@@ -1923,9 +2016,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../validators */ "./resources/js/validators.js");
 //
 //
 //
@@ -1968,20 +2058,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Name",
-  data: function data() {
-    return {
-      name: ''
-    };
+  props: {
+    value: {
+      type: String,
+      "default": ''
+    },
+    v: {
+      type: Object,
+      required: true
+    }
   },
-  validations: {
+  computed: {
     name: {
-      extAlphaNum: _validators__WEBPACK_IMPORTED_MODULE_1__["extAlphaNum"],
-      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(3),
-      maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["maxLength"])(15)
+      get: function get() {
+        return this.value;
+      },
+      set: function set(value) {
+        this.v.$touch(); // console.log(this.v.$touch());
+
+        this.$emit('input', value);
+      }
     }
   }
 });
@@ -1997,7 +2096,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../validators */ "./resources/js/validators.js");
 //
 //
 //
@@ -2046,22 +2144,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Price",
-  data: function data() {
-    return {
-      priceMin: '',
-      priceMax: ''
-    };
-  },
-  validations: {
-    priceMin: {
-      currency: _validators__WEBPACK_IMPORTED_MODULE_0__["currency"]
+  props: {
+    value: {
+      type: String,
+      "default": ''
     },
-    priceMax: {
-      currency: _validators__WEBPACK_IMPORTED_MODULE_0__["currency"],
-      minLessEqualMax: _validators__WEBPACK_IMPORTED_MODULE_0__["minLessEqualMax"]
+    v: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    touchInput: function touchInput(event) {
+      this.v.$touch();
+      this.$emit('input', event);
     }
   }
 });
@@ -2077,8 +2180,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2110,20 +2211,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['id', 'text'],
-  data: function data() {
-    return {
-      name: ''
-    };
-  },
-  validations: {
-    name: {
-      numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["numeric"],
-      maxValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["maxValue"])(10)
+  props: {
+    id: {
+      type: String,
+      required: true
+    },
+    text: {
+      type: String,
+      required: true
+    },
+    v: {
+      type: Object,
+      required: true
+    },
+    value: {
+      "default": ''
     }
   },
+  computed: {},
   methods: {}
 });
 
@@ -38302,24 +38413,40 @@ var render = function() {
     _vm._v(" "),
     _c(
       "tbody",
-      _vm._l(_vm.houses, function(house, index) {
-        return _c("tr", [
-          _c("th", { attrs: { scope: "row" } }, [_vm._v(_vm._s(index + 1))]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(house.name))]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(house.price))]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(house.bedrooms))]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(house.bathrooms))]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(house.storeys))]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(house.garages))])
-        ])
-      }),
-      0
+      [
+        _vm.houses === null
+          ? _c("tr", { staticClass: "text-center" }, [
+              _c("td", { attrs: { colspan: "7" } }, [_vm._v("Пусто")])
+            ])
+          : _vm.houses.length === 0
+          ? _c("tr", { staticClass: "text-center" }, [
+              _c("td", { attrs: { colspan: "7" } }, [
+                _vm._v("По запросу ничего не найдено")
+              ])
+            ])
+          : _vm.houses.length > 0
+          ? _vm._l(_vm.houses, function(house, index) {
+              return _c("tr", [
+                _c("th", { attrs: { scope: "row" } }, [
+                  _vm._v(_vm._s(index + 1))
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(house.name))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(house.price))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(house.bedrooms))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(house.bathrooms))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(house.storeys))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(house.garages))])
+              ])
+            })
+          : _vm._e()
+      ],
+      2
     )
   ])
 }
@@ -38391,7 +38518,19 @@ var render = function() {
             _c(
               "div",
               { staticClass: "col-md-12 col-lg-6" },
-              [_c("name", { ref: "name" })],
+              [
+                _c("name", {
+                  ref: "name",
+                  attrs: { v: _vm.$v.form.name },
+                  model: {
+                    value: _vm.form.name,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "name", $$v)
+                    },
+                    expression: "form.name"
+                  }
+                })
+              ],
               1
             )
           ]),
@@ -38400,7 +38539,17 @@ var render = function() {
             _c(
               "div",
               { staticClass: "col-md-12" },
-              [_c("price", { ref: "price" })],
+              [
+                _c("price", {
+                  ref: "price",
+                  attrs: { v: _vm.$v.form.price },
+                  on: {
+                    input: function($event) {
+                      return _vm.price($event)
+                    }
+                  }
+                })
+              ],
               1
             )
           ]),
@@ -38412,7 +38561,14 @@ var render = function() {
               [
                 _c("room", {
                   ref: "bedroom",
-                  attrs: { id: "bedroom", text: "Спальни" }
+                  attrs: { id: "bedroom", text: "Спальни", v: _vm.$v.form },
+                  model: {
+                    value: _vm.form.bedroom,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "bedroom", $$v)
+                    },
+                    expression: "form.bedroom"
+                  }
                 })
               ],
               1
@@ -38424,7 +38580,14 @@ var render = function() {
               [
                 _c("room", {
                   ref: "bathroom",
-                  attrs: { id: "bathroom", text: "Ванные" }
+                  attrs: { id: "bathroom", text: "Ванные", v: _vm.$v.form },
+                  model: {
+                    value: _vm.form.bathroom,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "bathroom", $$v)
+                    },
+                    expression: "form.bathroom"
+                  }
                 })
               ],
               1
@@ -38438,7 +38601,14 @@ var render = function() {
               [
                 _c("room", {
                   ref: "storey",
-                  attrs: { id: "storey", text: "Этажи" }
+                  attrs: { id: "storey", text: "Этажи", v: _vm.$v.form },
+                  model: {
+                    value: _vm.form.storey,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "storey", $$v)
+                    },
+                    expression: "form.storey"
+                  }
                 })
               ],
               1
@@ -38450,7 +38620,14 @@ var render = function() {
               [
                 _c("room", {
                   ref: "garage",
-                  attrs: { id: "garage", text: "Гаражи" }
+                  attrs: { id: "garage", text: "Гаражи", v: _vm.$v.form },
+                  model: {
+                    value: _vm.form.garage,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "garage", $$v)
+                    },
+                    expression: "form.garage"
+                  }
                 })
               ],
               1
@@ -38466,7 +38643,10 @@ var render = function() {
                 {
                   staticClass:
                     "btn btn-primary btn-block col-8  col-sm-5 col-lg-4 col-xl-3",
-                  attrs: { type: "submit", disabled: _vm.search }
+                  attrs: {
+                    type: "submit",
+                    disabled: _vm.search || this.$v.$invalid
+                  }
                 },
                 [
                   _vm.search
@@ -38522,21 +38702,21 @@ var render = function() {
         {
           name: "model",
           rawName: "v-model.trim",
-          value: _vm.$v.name.$model,
-          expression: "$v.name.$model",
+          value: _vm.name,
+          expression: "name",
           modifiers: { trim: true }
         }
       ],
       staticClass: "form-control",
-      class: { "is-invalid": _vm.$v.name.$error },
+      class: { "is-invalid": _vm.v.$error },
       attrs: { type: "text", id: "name" },
-      domProps: { value: _vm.$v.name.$model },
+      domProps: { value: _vm.name },
       on: {
         input: function($event) {
           if ($event.target.composing) {
             return
           }
-          _vm.$set(_vm.$v.name, "$model", $event.target.value.trim())
+          _vm.name = $event.target.value.trim()
         },
         blur: function($event) {
           return _vm.$forceUpdate()
@@ -38544,7 +38724,7 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    !_vm.$v.name.extAlphaNum
+    !_vm.v.extAlphaNum
       ? _c(
           "div",
           { staticClass: "invalid-feedback", staticStyle: { width: "100%" } },
@@ -38554,13 +38734,13 @@ var render = function() {
             )
           ]
         )
-      : !_vm.$v.name.minLength
+      : !_vm.v.minLength
       ? _c(
           "div",
           { staticClass: "invalid-feedback", staticStyle: { width: "100%" } },
           [_vm._v("\n        Название должно быть не менее 3 символов\n    ")]
         )
-      : !_vm.$v.name.maxLength
+      : !_vm.v.maxLength
       ? _c(
           "div",
           { staticClass: "invalid-feedback", staticStyle: { width: "100%" } },
@@ -38607,85 +38787,54 @@ var render = function() {
     _vm._v(" "),
     _c(
       "label",
-      {
-        staticClass: "d-md-none col-lg-12 px-0 mb-0",
-        attrs: { for: "priceMin" }
-      },
+      { staticClass: "d-md-none col-lg-12 px-0 mb-0", attrs: { for: "min" } },
       [_vm._v("Цена")]
     ),
     _vm._v(" "),
     _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model.number",
-          value: _vm.$v.priceMin.$model,
-          expression: "$v.priceMin.$model",
-          modifiers: { number: true }
-        }
-      ],
       staticClass: "form-control col-md-12 mr-2",
-      class: { "is-invalid": _vm.$v.priceMin.$error },
-      attrs: { type: "number", id: "priceMin", placeholder: "min" },
-      domProps: { value: _vm.$v.priceMin.$model },
+      class: { "is-invalid": _vm.v.min.$error },
+      attrs: { type: "text", id: "min", placeholder: "min" },
       on: {
         input: function($event) {
-          if ($event.target.composing) {
-            return
-          }
-          _vm.$set(_vm.$v.priceMin, "$model", _vm._n($event.target.value))
-        },
-        blur: function($event) {
-          return _vm.$forceUpdate()
+          return _vm.touchInput($event)
         }
       }
     }),
     _vm._v(" "),
-    _c("label", { attrs: { for: "priceMax" } }),
+    _c("label", { attrs: { for: "max" } }),
     _vm._v(" "),
     _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model.number",
-          value: _vm.$v.priceMax.$model,
-          expression: "$v.priceMax.$model",
-          modifiers: { number: true }
-        }
-      ],
       staticClass: "form-control col-md-12",
-      class: { "is-invalid": _vm.$v.priceMax.$error },
-      attrs: { type: "number", id: "priceMax", placeholder: "max" },
-      domProps: { value: _vm.$v.priceMax.$model },
+      class: { "is-invalid": _vm.v.max.$error },
+      attrs: { type: "text", id: "max", placeholder: "max" },
       on: {
         input: function($event) {
-          if ($event.target.composing) {
-            return
-          }
-          _vm.$set(_vm.$v.priceMax, "$model", _vm._n($event.target.value))
-        },
-        blur: function($event) {
-          return _vm.$forceUpdate()
+          return _vm.touchInput($event)
         }
       }
     }),
     _vm._v(" "),
-    !_vm.$v.priceMin.currency
-      ? _c("div", { staticClass: "invalid-feedback" }, [
-          _vm._v("\n        Минимальная цена должна быть числом >= 0\n    ")
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    !_vm.$v.priceMax.currency
-      ? _c("div", { staticClass: "invalid-feedback" }, [
-          _vm._v("\n        Максимальная цена должна быть числом >= 0\n    ")
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    !_vm.$v.priceMax.minLessEqualMax
+    !_vm.v.min.currency
       ? _c("div", { staticClass: "invalid-feedback" }, [
           _vm._v(
-            "\n        Минимальная цена должна быть меньше максимальной\n    "
+            "\n            Минимальная цена должна быть числом >= 0\n        "
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.v.max.currency
+      ? _c("div", { staticClass: "invalid-feedback" }, [
+          _vm._v(
+            "\n            Максимальная цена должна быть числом >= 0\n        "
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.v.max.minLessEqualMax
+      ? _c("div", { staticClass: "invalid-feedback" }, [
+          _vm._v(
+            "\n            Минимальная цена должна быть меньше максимальной\n        "
           )
         ])
       : _vm._e()
@@ -38744,21 +38893,21 @@ var render = function() {
         {
           name: "model",
           rawName: "v-model.number",
-          value: _vm.$v.name.$model,
-          expression: "$v.name.$model",
+          value: _vm.v[_vm.id].$model,
+          expression: "v[id].$model",
           modifiers: { number: true }
         }
       ],
       staticClass: "form-control",
-      class: { "is-invalid": _vm.$v.name.$error },
+      class: { "is-invalid": _vm.v[_vm.id].$error },
       attrs: { type: "text", id: _vm.id, placeholder: "количество" },
-      domProps: { value: _vm.$v.name.$model },
+      domProps: { value: _vm.v[_vm.id].$model },
       on: {
         input: function($event) {
           if ($event.target.composing) {
             return
           }
-          _vm.$set(_vm.$v.name, "$model", _vm._n($event.target.value))
+          _vm.$set(_vm.v[_vm.id], "$model", _vm._n($event.target.value))
         },
         blur: function($event) {
           return _vm.$forceUpdate()
@@ -38766,15 +38915,15 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    !_vm.$v.name.numeric
+    !_vm.v[_vm.id].numeric
       ? _c("div", { staticClass: "invalid-feedback" }, [
           _vm._v(
-            "\n        Поле может быть числом (0,1,2..) или пустой строкой\n    "
+            "\n            Поле может быть числом (0,1,2..) или пустой строкой\n        "
           )
         ])
-      : !_vm.$v.name.maxValue
+      : !_vm.v[_vm.id].maxValue
       ? _c("div", { staticClass: "invalid-feedback" }, [
-          _vm._v("\n        Значение поля должно быть <= 10\n    ")
+          _vm._v("\n            Значение поля должно быть <= 10\n        ")
         ])
       : _vm._e()
   ])
@@ -52824,6 +52973,208 @@ exports.withParams = withParams;
 
 /***/ }),
 
+/***/ "./node_modules/vuex-map-fields/dist/index.esm.js":
+/*!********************************************************!*\
+  !*** ./node_modules/vuex-map-fields/dist/index.esm.js ***!
+  \********************************************************/
+/*! exports provided: createHelpers, getField, mapFields, mapMultiRowFields, updateField */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createHelpers", function() { return createHelpers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getField", function() { return getField; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapFields", function() { return mapFields; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapMultiRowFields", function() { return mapMultiRowFields; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateField", function() { return updateField; });
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+}
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
+    return;
+  }
+
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+}
+
+function arrayToObject() {
+  var fields = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  return fields.reduce(function (prev, path) {
+    var key = path.split(".").slice(-1)[0];
+
+    if (prev[key]) {
+      throw new Error("The key `".concat(key, "` is already in use."));
+    } // eslint-disable-next-line no-param-reassign
+
+
+    prev[key] = path;
+    return prev;
+  }, {});
+}
+
+function objectEntries(obj) {
+  return Object.keys(obj).map(function (key) {
+    return [key, obj[key]];
+  });
+}
+
+function normalizeNamespace(fn) {
+  return function () {
+    for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
+      params[_key] = arguments[_key];
+    }
+
+    // eslint-disable-next-line prefer-const
+    var _ref = typeof params[0] === "string" ? [].concat(params) : [""].concat(params),
+        _ref2 = _slicedToArray(_ref, 4),
+        namespace = _ref2[0],
+        map = _ref2[1],
+        getterType = _ref2[2],
+        mutationType = _ref2[3];
+
+    if (namespace.length && namespace.charAt(namespace.length - 1) !== "/") {
+      namespace += "/";
+    }
+
+    getterType = "".concat(namespace).concat(getterType || "getField");
+    mutationType = "".concat(namespace).concat(mutationType || "updateField");
+    return fn(namespace, map, getterType, mutationType);
+  };
+}
+
+function getField(state) {
+  return function (path) {
+    return path.split(/[.[\]]+/).reduce(function (prev, key) {
+      return prev[key];
+    }, state);
+  };
+}
+function updateField(state, _ref3) {
+  var path = _ref3.path,
+      value = _ref3.value;
+  path.split(/[.[\]]+/).reduce(function (prev, key, index, array) {
+    if (array.length === index + 1) {
+      // eslint-disable-next-line no-param-reassign
+      prev[key] = value;
+    }
+
+    return prev[key];
+  }, state);
+}
+var mapFields = normalizeNamespace(function (namespace, fields, getterType, mutationType) {
+  var fieldsObject = Array.isArray(fields) ? arrayToObject(fields) : fields;
+  return Object.keys(fieldsObject).reduce(function (prev, key) {
+    var path = fieldsObject[key];
+    var field = {
+      get: function get() {
+        return this.$store.getters[getterType](path);
+      },
+      set: function set(value) {
+        this.$store.commit(mutationType, {
+          path: path,
+          value: value
+        });
+      }
+    }; // eslint-disable-next-line no-param-reassign
+
+    prev[key] = field;
+    return prev;
+  }, {});
+});
+var mapMultiRowFields = normalizeNamespace(function (namespace, paths, getterType, mutationType) {
+  var pathsObject = Array.isArray(paths) ? arrayToObject(paths) : paths;
+  return Object.keys(pathsObject).reduce(function (entries, key) {
+    var path = pathsObject[key]; // eslint-disable-next-line no-param-reassign
+
+    entries[key] = {
+      get: function get() {
+        var store = this.$store;
+        var rows = objectEntries(store.getters[getterType](path));
+        return rows.map(function (fieldsObject) {
+          return Object.keys(fieldsObject[1]).reduce(function (prev, fieldKey) {
+            var fieldPath = "".concat(path, "[").concat(fieldsObject[0], "].").concat(fieldKey);
+            return Object.defineProperty(prev, fieldKey, {
+              get: function get() {
+                return store.getters[getterType](fieldPath);
+              },
+              set: function set(value) {
+                store.commit(mutationType, {
+                  path: fieldPath,
+                  value: value
+                });
+              }
+            });
+          }, {});
+        });
+      }
+    };
+    return entries;
+  }, {});
+});
+var createHelpers = function createHelpers(_ref4) {
+  var _ref5;
+
+  var getterType = _ref4.getterType,
+      mutationType = _ref4.mutationType;
+  return _ref5 = {}, _defineProperty(_ref5, getterType, getField), _defineProperty(_ref5, mutationType, updateField), _defineProperty(_ref5, "mapFields", normalizeNamespace(function (namespace, fields) {
+    return mapFields(namespace, fields, getterType, mutationType);
+  })), _defineProperty(_ref5, "mapMultiRowFields", normalizeNamespace(function (namespace, paths) {
+    return mapMultiRowFields(namespace, paths, getterType, mutationType);
+  })), _ref5;
+};
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vuex/dist/vuex.esm.js":
 /*!********************************************!*\
   !*** ./node_modules/vuex/dist/vuex.esm.js ***!
@@ -53990,10 +54341,10 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('app', __webpack_require__(/*! ./components/App.vue */ "./resources/js/components/App.vue")["default"]);
 
 
 Vue.use(vuelidate__WEBPACK_IMPORTED_MODULE_1___default.a);
+Vue.component('app', __webpack_require__(/*! ./components/App.vue */ "./resources/js/components/App.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -54276,7 +54627,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************************************************************!*\
   !*** ./resources/js/components/SearchForm.vue?vue&type=template&id=28665937&scoped=true& ***!
   \*******************************************************************************************/
-/*! exports provided: render, staticRenderFns */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -54533,6 +54884,32 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/store/form.js":
+/*!************************************!*\
+  !*** ./resources/js/store/form.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex_map_fields__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex-map-fields */ "./node_modules/vuex-map-fields/dist/index.esm.js");
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: {
+    name: ''
+  },
+  getters: {
+    getField: vuex_map_fields__WEBPACK_IMPORTED_MODULE_0__["getField"]
+  },
+  mutations: {
+    updateField: vuex_map_fields__WEBPACK_IMPORTED_MODULE_0__["updateField"]
+  },
+  actions: {}
+});
+
+/***/ }),
+
 /***/ "./resources/js/store/index.js":
 /*!*************************************!*\
   !*** ./resources/js/store/index.js ***!
@@ -54545,14 +54922,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./form */ "./resources/js/store/form.js");
+
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
-/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+  // strict: process.env.NODE_ENV !== 'production',
   state: {
-    houses: []
+    houses: null
   }
-}));
+});
+/* harmony default export */ __webpack_exports__["default"] = (store);
 
 /***/ }),
 
@@ -54574,7 +54955,7 @@ __webpack_require__.r(__webpack_exports__);
 var extAlphaNum = vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["helpers"].regex('extAlphaNum', /^[\-a-zA-Z0-9а-яА-Я ]*$/);
 var currency = vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["helpers"].regex('currency', /^(0|[1-9]\d*)(\.\d{1,2})?$/);
 var minLessEqualMax = function minLessEqualMax(value, vm) {
-  return !vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["helpers"].req(value) || vm.priceMin <= value;
+  return !vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["helpers"].req(value) || vm.min <= value;
 };
 
 /***/ }),

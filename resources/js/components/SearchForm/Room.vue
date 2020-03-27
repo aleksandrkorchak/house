@@ -9,45 +9,56 @@
         <input
             type="text"
             class="form-control"
-            :class="{'is-invalid': $v.name.$error}"
+            :class="{'is-invalid': v[id].$error}"
             :id="id"
             placeholder="количество"
-            v-model.number="$v.name.$model"
+            v-model.number="v[id].$model"
         >
         <div
             class="invalid-feedback"
-            v-if="!$v.name.numeric"
+            v-if="!v[id].numeric"
         >
             Поле может быть числом (0,1,2..) или пустой строкой
         </div>
         <div
             class="invalid-feedback"
-            v-else-if="!$v.name.maxValue"
+            v-else-if="!v[id].maxValue"
         >
             Значение поля должно быть <= 10
         </div>
+
+<!--        <pre>-->
+<!--            {{ v }}-->
+<!--        </pre>-->
+
     </div>
 </template>
 
 <script>
-    import {maxValue, numeric} from "vuelidate/lib/validators";
 
     export default {
-        props: [
-            'id',
-            'text'
-        ],
-        data() {
-            return {
-                name: ''
+        props: {
+            id: {
+                type: String,
+                required: true
+            },
+            text: {
+                type: String,
+                required: true
+            },
+            v: {
+                type: Object,
+                required: true
+            },
+            value: {
+                default: ''
             }
         },
-        validations: {
-            name: {
-                numeric,
-                maxValue: maxValue(10)
-            }
+
+        computed: {
+
         },
+
         methods: {}
     }
 </script>

@@ -6,67 +6,74 @@
             </div>
         </div>
 
-        <label for="priceMin" class="d-md-none col-lg-12 px-0 mb-0">Цена</label>
+        <label for="min" class="d-md-none col-lg-12 px-0 mb-0">Цена</label>
         <input
-            type="number"
+            type="text"
             class="form-control col-md-12 mr-2"
-            :class="{'is-invalid': $v.priceMin.$error}"
-            id="priceMin"
+            :class="{'is-invalid': v.min.$error}"
+            id="min"
             placeholder="min"
-            v-model.number="$v.priceMin.$model"
+            @input="touchInput($event)"
         >
 
-        <label for="priceMax"></label>
+        <label for="max"></label>
         <input
-            type="number"
+            type="text"
             class="form-control col-md-12"
-            :class="{'is-invalid': $v.priceMax.$error}"
-            id="priceMax"
+            :class="{'is-invalid': v.max.$error}"
+            id="max"
             placeholder="max"
-            v-model.number="$v.priceMax.$model"
+            @input="touchInput($event)"
         >
         <div
             class="invalid-feedback"
-            v-if="!$v.priceMin.currency"
+            v-if="!v.min.currency"
         >
             Минимальная цена должна быть числом >= 0
         </div>
         <div
             class="invalid-feedback"
-            v-if="!$v.priceMax.currency"
+            v-if="!v.max.currency"
         >
             Максимальная цена должна быть числом >= 0
         </div>
         <div
             class="invalid-feedback"
-            v-if="!$v.priceMax.minLessEqualMax"
+            v-if="!v.max.minLessEqualMax"
         >
             Минимальная цена должна быть меньше максимальной
         </div>
+
+<!--        <pre>-->
+<!--            {{ v }}-->
+<!--        </pre>-->
+
     </div>
 </template>
 
 <script>
-    import {currency, minLessEqualMax} from "../../validators";
 
     export default {
         name: "Price",
 
-        data() {
-            return {
-                priceMin: '',
-                priceMax: ''
+        props: {
+            value: {
+                type: String,
+                default: ''
+            },
+            v: {
+                type: Object,
+                required: true
             }
         },
-        validations: {
-            priceMin: {
-                currency
-            },
-            priceMax: {
-                currency,
-                minLessEqualMax
+
+        methods: {
+            touchInput(event) {
+                this.v.$touch();
+                this.$emit('input', event);
             }
-        }
+        },
+
     }
 </script>
 
