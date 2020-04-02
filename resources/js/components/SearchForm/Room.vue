@@ -14,6 +14,7 @@
             placeholder="количество"
             v-model.number="v[id].$model"
         >
+
         <div
             class="invalid-feedback"
             v-if="!v[id].numeric"
@@ -27,9 +28,7 @@
             Значение поля должно быть <= 10
         </div>
 
-<!--        <pre>-->
-<!--            {{ v }}-->
-<!--        </pre>-->
+
 
     </div>
 </template>

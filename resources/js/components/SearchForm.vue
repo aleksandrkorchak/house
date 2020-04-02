@@ -90,9 +90,6 @@
 
             </form>
 
-<!--            <pre>-->
-<!--                {{ this.$v.$invalid  }}-->
-<!--            </pre>-->
 
         </div>
     </div>
@@ -104,10 +101,7 @@
     import Price from "./SearchForm/Price";
     import Name from "./SearchForm/Name";
     import {currency, extAlphaNum, minLessEqualMax} from "../validators";
-    import {maxLength, minLength, numeric} from "vuelidate/lib/validators";
-    import {maxValue} from "vuelidate/lib/validators";
-
-    import {mapFields} from 'vuex-map-fields'
+    import {maxValue, maxLength, minLength, numeric} from "vuelidate/lib/validators";
 
     export default {
         name: "SearchForm",
@@ -133,6 +127,26 @@
             name: Name
         },
 
+        // validations: {
+        //     form: {
+        //         name: {},
+        //
+        //         price: {
+        //             min: {},
+        //             max: {}
+        //         },
+        //
+        //         bedroom: {},
+        //
+        //         bathroom: {},
+        //
+        //         storey: {},
+        //
+        //         garage: {}
+        //
+        //
+        //     },
+        // },
 
         validations: {
             form: {
@@ -193,7 +207,8 @@
 
 
             sendRequest() {
-                // console.log(this);
+
+                this.$store.state.errors = null;
 
                 this.search = true;
                 const formData = new FormData();
@@ -205,21 +220,24 @@
                 formData.append('storey', this.form.storey);
                 formData.append('garage', this.form.garage);
 
-                // console.log(formData.get('name'));
-
-                axios.defaults.headers.common['X-CSRF-TOKEN'] =
-                    document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 axios.post('/ajax', formData)
                     .then((response) => {
-                        // console.log(response.data);
                         this.$store.state.houses = response.data;
-                        // console.log(this.$store.state.houses)
                     })
-                    .catch(function (error) {
-                        console.log(error)
+                    .catch((error) => {
+                        if (error.response) {
+                            if (error.response.data.errors) {
+                                this.$store.state.errors = error.response.data.errors;
+                            } else {
+                                this.$store.state.errors = error.response.data.message
+                            }
+                        } else if (error.request) {
+                            this.$store.state.errors = error;
+                        } else {
+                            this.$store.state.errors = error.message;
+                        }
                     })
                     .then(() => {
-                        console.log('Response anyway');
                         this.search = false
                     });
             },

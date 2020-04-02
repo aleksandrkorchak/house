@@ -9,6 +9,7 @@ const store = new Vuex.Store({
 
     state: {
         houses: null,
+        errors: null
     }
 });
 

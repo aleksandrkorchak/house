@@ -64,7 +64,6 @@
                 },
                 set(value) {
                     this.v.$touch();
-                    // console.log(this.v.$touch());
                     this.$emit('input', value)
                 }
             }

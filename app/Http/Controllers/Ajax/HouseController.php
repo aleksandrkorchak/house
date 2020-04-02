@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Ajax;
 
+use App\Http\Requests\HouseFormRequest;
 use App\Models\House;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class HouseController extends Controller
 {
-    public function findHouse(Request $request)
+    public function findHouse(HouseFormRequest $request)
     {
         $condition = [];
 

@@ -25,6 +25,7 @@
             placeholder="max"
             @input="touchInput($event)"
         >
+
         <div
             class="invalid-feedback"
             v-if="!v.min.currency"
@@ -44,9 +45,6 @@
             Минимальная цена должна быть меньше максимальной
         </div>
 
-<!--        <pre>-->
-<!--            {{ v }}-->
-<!--        </pre>-->
 
     </div>
 </template>
