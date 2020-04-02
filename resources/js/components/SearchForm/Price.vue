@@ -76,7 +76,7 @@
 </script>
 
 <style scoped>
-    div.invalid-feedback {
-        width: 100%;
-    }
+    /*div.invalid-feedback {*/
+    /*    width: 100%;*/
+    /*}*/
 </style>

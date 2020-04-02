@@ -127,26 +127,6 @@
             name: Name
         },
 
-        // validations: {
-        //     form: {
-        //         name: {},
-        //
-        //         price: {
-        //             min: {},
-        //             max: {}
-        //         },
-        //
-        //         bedroom: {},
-        //
-        //         bathroom: {},
-        //
-        //         storey: {},
-        //
-        //         garage: {}
-        //
-        //
-        //     },
-        // },
 
         validations: {
             form: {
@@ -193,7 +173,6 @@
         methods: {
 
             price(event) {
-
                 switch (event.target.id) {
                     case 'min':
                         this.form.price.min = event.target.value;
@@ -202,10 +181,12 @@
                         this.form.price.max = event.target.value;
                         break;
                 }
-
             },
 
 
+            /**
+             * Send ajax request
+             */
             sendRequest() {
 
                 this.$store.state.errors = null;

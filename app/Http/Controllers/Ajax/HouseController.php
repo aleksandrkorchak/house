@@ -9,6 +9,13 @@ use App\Http\Controllers\Controller;
 
 class HouseController extends Controller
 {
+
+    /**
+     * Find a house according to the given parameters
+     *
+     * @param HouseFormRequest $request
+     * @return false|string
+     */
     public function findHouse(HouseFormRequest $request)
     {
         $condition = [];
@@ -43,13 +50,5 @@ class HouseController extends Controller
         return json_encode($houses);
     }
 
-    public function test()
-    {
-
-        $houses = House::where('name', 'like', '%a%')->get()->toArray();
-        echo '<pre>';
-        print_r($houses);
-        echo '</pre>';
-    }
 
 }
